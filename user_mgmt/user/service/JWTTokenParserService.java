@@ -35,8 +35,8 @@ public class JWTTokenParserService {
 		return expiration.before(new Date());
 	}
 
-	public Long validateToken(String token) {
+	public String validateToken(String token) {
 		isTokenExpired(token);
-		return Long.valueOf(getUserIdFromToken(token));
+		return getUserIdFromToken(token);
 	}
 }

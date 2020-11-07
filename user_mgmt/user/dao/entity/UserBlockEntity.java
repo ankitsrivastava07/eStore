@@ -9,26 +9,19 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
+@Table(name = "failed_attempts")
 @Getter
 @Setter
-@Entity
-@Table(name = "users")
-public class UserEntity {
+public class UserBlockEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private String firstName;
-	@Column(nullable = false)
-	private String lastName;
+	private String userName;
 	@Column(nullable = false)
 	private String email;
 	@Column(nullable = false)
-	private String userName;
-	@Column(nullable = false)
-	private String password;
-	@Column
-	private String mobileNumber;
-
+	private Integer attempts;
 }

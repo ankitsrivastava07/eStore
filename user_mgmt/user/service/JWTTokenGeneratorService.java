@@ -16,17 +16,17 @@ public class JWTTokenGeneratorService {
 	@Value("${jwt.secret}")
 	private String secret;
 
-	public String createToken(Map<String, Object> claims, String userId) {
+	public String createToken(Map<String, Object> claims, String userName) {
 		return Jwts.builder()
 				.setClaims(claims)
-				.setSubject(userId)
+				.setSubject(userName)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
 	}
-	public String generateToken(String userId) {
+	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
-		return createToken(claims, userId);
+		return createToken(claims, userName);
 	}
 }

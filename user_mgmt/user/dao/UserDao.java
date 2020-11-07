@@ -4,8 +4,10 @@ import com.estore.user_mgmt.user.dto.UserDto;
 
 public interface UserDao {
 
-	Long authenticate(String userName, String password);
+	String authenticate(String userName, String password);
 
-	UserDto findByUserId(Long userId);
+	String findByUserName(String userName);
+
+	void create(UserDto userDto);
 
 }

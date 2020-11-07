@@ -1,4 +1,4 @@
-package com.estore.user_mgmt.user.exceptionHandle;
+package com.estore.user_mgmt.user.exception;
 
 public class InvalidCredentialException extends RuntimeException {
 

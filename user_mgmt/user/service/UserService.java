@@ -6,5 +6,7 @@ public interface UserService {
 
 	String authenticate(String userName, String password);
 
-	UserDto validateToken(String token);
+	String validateToken(String token);
+
+	void create(UserDto userDto);
 }

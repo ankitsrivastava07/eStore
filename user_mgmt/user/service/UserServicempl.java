@@ -1,13 +1,13 @@
 package com.estore.user_mgmt.user.service;
 
+import org.springframework.stereotype.Service;
 import com.estore.user_mgmt.user.dao.UserDao;
 import com.estore.user_mgmt.user.dto.UserDto;
-
 import lombok.AllArgsConstructor;
 
+@Service
 @AllArgsConstructor
 public class UserServicempl implements UserService {
-	// token ,parser,
 
 	private UserDao userDao;
 	private JWTTokenGeneratorService jWTTokenGeneratorService;
@@ -15,15 +15,18 @@ public class UserServicempl implements UserService {
 
 	@Override
 	public String authenticate(String userName, String password) {
-		return jWTTokenGeneratorService.generateToken((userDao.authenticate(userName, password).toString()));
-
+		return jWTTokenGeneratorService.generateToken((userDao.authenticate(userName, password)));
 	}
 
 	@Override
-	public UserDto validateToken(String token) {
-		Long userId = jWTTokenParserService.validateToken(token);
-		return userDao.findByUserId(userId);
+	public String validateToken(String token) {
+		String userName = jWTTokenParserService.validateToken(token);
+		return userDao.findByUserName(userName);
+	}
 
+	@Override
+	public void create(UserDto userDto) {
+		userDao.create(userDto);
 	}
 
 }
