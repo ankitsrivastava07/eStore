@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 
 		Long id = null;
 
-		if (Objects.isNull(getUserId(userName)))
+		if (Objects.isNull(userRepository.findByEmailOrUserName(userName)))
 			throw new EmailOrUsernameNotFoundException("Email/Username which you have provided does not exists");
 
 		Long attempts = userNameOrEmailBlockRepository.findByUserName(userName);
@@ -46,19 +46,19 @@ public class UserDaoImpl implements UserDao {
 		String userName2 = userRepository.findByUserNameAndPassword(userName, password);
 
 		if (Objects.nonNull(userName2) && (id = userNameOrEmailBlockRepository.findByEmail(userName)) != null) {
-			UserBlockEntity entity2 = userNameOrEmailBlockRepository.getOne(id);
-			entity2.setAttempts(0);
+			UserBlockEntity entity = userNameOrEmailBlockRepository.getOne(id);
+			entity.setAttempts(0);
 
-			userNameOrEmailBlockRepository.save(entity2);
+			userNameOrEmailBlockRepository.save(entity);
 		}
 
 		if (Objects.isNull(userName2)) {
 
 			if (Objects.isNull(userNameOrEmailBlockRepository.findByUserName(userName))) {
-				UserEntity entity2 = userRepository.findById((getUserId(userName))).get();
+				UserEntity entity = userRepository.findById((getUserId(userName))).get();
 				UserBlockEntity userBlockEntity = new UserBlockEntity();
-				userBlockEntity.setEmail(entity2.getEmail());
-				userBlockEntity.setUserName((entity2.getUserName()));
+				userBlockEntity.setEmail(entity.getEmail());
+				userBlockEntity.setUserName((entity.getUserName()));
 				userBlockEntity.setAttempts(1);
 				userNameOrEmailBlockRepository.save(userBlockEntity);
 			}
@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
 				userNameOrEmailBlockRepository.save(userBlockEntity);
 			}
 
-			throw new InvalidCredentialException("Invalid username or password.");
+			throw new InvalidCredentialException("The password you have entered is incorrect.");
 		}
 		return userName2;
 	}
@@ -88,7 +88,7 @@ public class UserDaoImpl implements UserDao {
 		userRepository.save(objectTranslator.translate(userDto, UserEntity.class));
 	}
 
-	@Scheduled(fixedRate =  86400)
+	@Scheduled(fixedRate = 86400)
 	public void updateAttempts() {
 		List<UserBlockEntity> users = userNameOrEmailBlockRepository.findByAttempts(5);
 
@@ -97,5 +97,4 @@ public class UserDaoImpl implements UserDao {
 			userNameOrEmailBlockRepository.save(user);
 		}
 	}
-
 }
